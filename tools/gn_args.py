@@ -215,6 +215,29 @@ def GetRecommendedDefaultArgs():
     # x86 or x64 build: $ gclient runhooks
     result['use_sysroot'] = False
 
+    result['is_desktop_linux'] = True
+    result['treat_warnings_as_errors'] = False
+    result['use_ozone'] = False
+    result['use_gconf'] = False
+    result['is_clang'] = False
+    result['clang_use_chrome_plugins'] = False
+    result['use_vulcanize'] = False
+    result['use_gnome_keyring'] = False
+    result['rtc_libvpx_build_vp9'] = False
+    result['enable_nacl_nonsfi'] = False
+    result['enable_google_now'] = False
+    result['enable_hangout_services_extension'] = False
+    result['enable_iterator_debugging'] = False
+    result['linux_use_bundled_binutils'] = False
+    result['use_gio'] = True
+    result['use_gold'] = True
+    result['use_pulseaudio'] = True
+    result['link_pulseaudio'] = True
+    result['enable_widevine'] = True
+    result['proprietary_codecs'] = True
+    result['ffmpeg_branding'] = "Chrome"
+    result['fieldtrial_testing_like_official_build'] = True
+
   return result
 
 
