@@ -53,7 +53,10 @@
 #endif  // defined(USE_AURA)
 
 #if defined(USE_AURA) && defined(OS_LINUX)
-#include "ui/base/ime/input_method_initializer.h"
+//#include "ui/base/ime/input_method_initializer.h"
+#include "chrome/browser/ui/libgtkui/gtk_ui.h"
+#include "ui/base/ime/linux/linux_input_method_context_factory.h"
+#include "libcef/browser/gtk_input_method_context_factory.h"
 #endif
 
 #if defined(OS_LINUX)
@@ -119,9 +122,9 @@ void CefBrowserMainParts::PreMainMessageLoopStart() {
 
 void CefBrowserMainParts::PreEarlyInitialization() {
 #if defined(USE_AURA) && defined(OS_LINUX)
-  // TODO(linux): Consider using a real input method or
-  // views::LinuxUI::SetInstance.
-  ui::InitializeInputMethodForTesting();
+  const ui::LinuxInputMethodContextFactory* gtk_ime_context_factory =
+    new GtkInputMethodContextFactory();
+  ui::LinuxInputMethodContextFactory::SetInstance(gtk_ime_context_factory);
 #endif
 }
 

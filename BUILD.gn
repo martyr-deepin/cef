@@ -228,6 +228,15 @@ group("cef") {
   ]
 }
 
+pkg_config("gtk2_internal_config") {
+  # Gtk requires gmodule, but it does not list it as a dependency in some
+  # misconfigured systems.
+  packages = [
+    "gmodule-2.0",
+    "gtk+-2.0",
+    "gthread-2.0",
+  ]
+}
 
 #
 # libcef static target.
@@ -326,6 +335,8 @@ static_library("libcef_static") {
     "libcef/browser/frame_host_impl.cc",
     "libcef/browser/frame_host_impl.h",
     "libcef/browser/geolocation_impl.cc",
+    "libcef/browser/gtk_input_method_context_factory.cc",
+    "libcef/browser/gtk_input_method_context_factory.h",
     "libcef/browser/image_impl.cc",
     "libcef/browser/image_impl.h",
     "libcef/browser/javascript_dialog_runner.h",
@@ -894,6 +905,13 @@ static_library("libcef_static") {
       ]
     }
 
+    # The libcef target depends on gtk2 in IME module.
+    if (is_linux && !use_sysroot) {
+      configs += [
+        ":gtk2_internal_config",
+      ]
+    }
+
     if (is_linux) {
       sources += [
         # Support for UI input events.
@@ -1358,6 +1376,7 @@ if (is_mac) {
         "//ui/resources:ui_unscaled_resources_grd",
       ]
     }
+
 
     if (is_linux && !is_debug && !using_sanitizer && use_allocator=="none") {
       # Only export necessary symbols from libcef.so.
