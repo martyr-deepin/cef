@@ -215,28 +215,42 @@ def GetRecommendedDefaultArgs():
     # x86 or x64 build: $ gclient runhooks
     result['use_sysroot'] = False
 
-    result['is_desktop_linux'] = True
-    result['treat_warnings_as_errors'] = False
-    result['use_ozone'] = False
-    result['use_gconf'] = False
-    result['is_clang'] = False
     result['clang_use_chrome_plugins'] = False
-    result['use_vulcanize'] = False
-    result['use_gnome_keyring'] = False
-    result['rtc_libvpx_build_vp9'] = False
+    #result['enable_background'] = False
+    #result['enable_extensions'] = False
     result['enable_nacl_nonsfi'] = False
     result['enable_google_now'] = False
     result['enable_hangout_services_extension'] = False
+    result['enable_hotwording'] = False
     result['enable_iterator_debugging'] = False
+    #result['enable_one_click_signin'] = False
+    result['enable_openvr'] = False
+    result['enable_reading_list'] = False
+    result['enable_remoting'] = False
+    result['enable_service_discovery'] = False
+    #result['enable_session_service'] = False
+    result['enable_vr'] = False
+    result['enable_widevine'] = True
+    result['ffmpeg_branding'] = "Chrome"
+    result['fieldtrial_testing_like_official_build'] = True
+    result['is_clang'] = False
+    result['is_desktop_linux'] = True
+    result['link_pulseaudio'] = True
     result['linux_use_bundled_binutils'] = False
+    result['proprietary_codecs'] = True
+    result['remove_webcore_debug_symbols'] = True
+    result['rtc_libvpx_build_vp9'] = True
+    # Disable safe-browsing
+    #result['safe_browsing_mode'] = 0
+    result['symbol_level'] = 0
+    result['treat_warnings_as_errors'] = False
+    result['use_gconf'] = True
+    result['use_gnome_keyring'] = False
+    result['use_ozone'] = False
     result['use_gio'] = True
     result['use_gold'] = True
     result['use_pulseaudio'] = True
-    result['link_pulseaudio'] = True
-    result['enable_widevine'] = True
-    result['proprietary_codecs'] = True
-    result['ffmpeg_branding'] = "Chrome"
-    result['fieldtrial_testing_like_official_build'] = True
+    result['use_vulcanize'] = False
 
   return result
 
