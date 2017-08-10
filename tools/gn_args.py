@@ -245,10 +245,11 @@ def GetRecommendedDefaultArgs():
     result['symbol_level'] = 0
     result['treat_warnings_as_errors'] = False
     result['use_gconf'] = True
-    result['use_gnome_keyring'] = False
-    result['use_ozone'] = False
     result['use_gio'] = True
+    result['use_gnome_keyring'] = False
     result['use_gold'] = True
+    result['use_kerberos'] = False
+    result['use_ozone'] = False
     result['use_pulseaudio'] = True
     result['use_vulcanize'] = False
 
