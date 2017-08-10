@@ -959,6 +959,23 @@ CEF_EXPORT int cef_launch_process(struct _cef_command_line_t* command_line) {
   return _retval;
 }
 
+CEF_EXPORT int cef_override_path(cef_path_key_t key, const cef_string_t* path) {
+  // AUTO-GENERATED CONTENT - DELETE THIS COMMENT BEFORE MODIFYING
+
+  // Verify param: path; type: string_byref_const
+  DCHECK(path);
+  if (!path)
+    return 0;
+
+  // Execute
+  bool _retval = CefOverridePath(
+      key,
+      CefString(path));
+
+  // Return type: bool
+  return _retval;
+}
+
 CEF_EXPORT int cef_register_scheme_handler_factory(
     const cef_string_t* scheme_name,
     const cef_string_t* domain_name,
