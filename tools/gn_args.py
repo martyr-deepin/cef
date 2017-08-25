@@ -218,13 +218,15 @@ def GetRecommendedDefaultArgs():
     result['clang_use_chrome_plugins'] = False
     #result['enable_background'] = False
     #result['enable_extensions'] = False
-    result['enable_nacl_nonsfi'] = False
     result['enable_google_now'] = False
     result['enable_hangout_services_extension'] = False
     result['enable_hotwording'] = False
     result['enable_iterator_debugging'] = False
+    result['enable_nacl_nonsfi'] = False
+    #result['enable_notifications'] = False
     #result['enable_one_click_signin'] = False
     result['enable_openvr'] = False
+    #result['enable_pdf'] = False
     result['enable_reading_list'] = False
     result['enable_remoting'] = False
     result['enable_service_discovery'] = False
@@ -237,6 +239,8 @@ def GetRecommendedDefaultArgs():
     result['is_desktop_linux'] = True
     result['link_pulseaudio'] = True
     result['linux_use_bundled_binutils'] = False
+    # Reduce binary size, takes much longer to compile.
+    result['optimize_for_size'] = True
     result['proprietary_codecs'] = True
     result['remove_webcore_debug_symbols'] = True
     result['rtc_libvpx_build_vp9'] = True
@@ -244,6 +248,10 @@ def GetRecommendedDefaultArgs():
     #result['safe_browsing_mode'] = 0
     result['symbol_level'] = 0
     result['treat_warnings_as_errors'] = False
+    # Disable tcmalloc
+    result['use_allocator'] = 'none'
+    result['use_alsa'] = False
+    result['use_experimental_allocator_shim'] = False
     result['use_gconf'] = True
     result['use_gio'] = True
     result['use_gnome_keyring'] = False
@@ -252,6 +260,7 @@ def GetRecommendedDefaultArgs():
     result['use_ozone'] = False
     result['use_pulseaudio'] = True
     result['use_vulcanize'] = False
+    #result['v8_use_external_startup_data'] = False
 
   return result
 
@@ -529,6 +538,7 @@ def GetAllPlatformConfigs(build_args):
               % cpu)
     else:
       supported_cpus = ['x64']
+
   elif platform == 'windows':
     supported_cpus = ['x86', 'x64']
   elif platform == 'macosx':
