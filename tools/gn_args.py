@@ -251,7 +251,6 @@ def GetRecommendedDefaultArgs():
     # Disable tcmalloc
     result['use_allocator'] = 'none'
     result['use_alsa'] = False
-    result['use_experimental_allocator_shim'] = False
     result['use_gconf'] = True
     result['use_gio'] = True
     result['use_gnome_keyring'] = False
