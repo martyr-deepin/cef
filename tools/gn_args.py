@@ -61,6 +61,7 @@
 #     - Result: An AssertionError will be thrown if validation fails.
 
 import os
+from platform import machine as platform_machine
 import shlex
 import sys
 
@@ -542,8 +543,7 @@ def GetAllPlatformConfigs(build_args):
               % cpu)
     else:
       supported_cpus = ['x64']
-      from platform import machine
-      machine = machine()
+      machine = platform_machine()
       if machine == 'aarch64':
           supported_cpus = ['arm64']
 
