@@ -89,10 +89,11 @@ def git_apply_patch_file(patch_path, patch_dir):
     # whitespace errors with git apply.
     patch_string = patch_string.replace('\r\n', '\n')
 
+  # NOTE(Shaohua): No need to check git repository
   # Git apply fails silently if not run relative to a respository root.
-  if not is_checkout(patch_dir):
-    sys.stdout.write('... patch directory is not a repository root.\n')
-    return 'fail'
+  #if not is_checkout(patch_dir):
+  #  sys.stdout.write('... patch directory is not a repository root.\n')
+  #  return 'fail'
 
   # Output patch contents.
   cmd = '%s apply -p0 --numstat' % git_exe
