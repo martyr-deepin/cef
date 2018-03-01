@@ -61,7 +61,6 @@
 #     - Result: An AssertionError will be thrown if validation fails.
 
 import os
-from platform import machine as platform_machine
 import shlex
 import sys
 
@@ -261,11 +260,6 @@ def GetRecommendedDefaultArgs():
     result['use_pulseaudio'] = True
     result['use_vulcanize'] = False
     #result['v8_use_external_startup_data'] = False
-
-  import platform
-  machine = platform.machine()
-  if machine == 'aarch64':
-    result['target_cpu'] = 'aarch64'
 
   return result
 
@@ -543,7 +537,8 @@ def GetAllPlatformConfigs(build_args):
               % cpu)
     else:
       supported_cpus = ['x64']
-      machine = platform_machine()
+      from platform import machine
+      machine = machine()
       if machine == 'aarch64':
           supported_cpus = ['arm64']
 
