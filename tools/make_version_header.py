@@ -76,8 +76,9 @@ def write_version_header(header, chrome_version, cef_version, cpp_header_dir):
 
   year = get_year()
 
-  if not git.is_checkout('.'):
-    raise Exception('Not a valid checkout')
+  # NOTE(Shaohua): No need to check .git folder
+  #if not git.is_checkout('.'):
+  #  raise Exception('Not a valid checkout')
 
   commit_number = git.get_commit_number()
   commit_hash = git.get_hash()
