@@ -261,6 +261,11 @@ def GetRecommendedDefaultArgs():
     result['use_vulcanize'] = False
     #result['v8_use_external_startup_data'] = False
 
+  import platform
+  machine = platform.machine()
+  if machine == 'aarch64':
+    result['target_cpu'] = 'aarch64'
+
   return result
 
 
@@ -346,8 +351,8 @@ def ValidateArgs(args):
   elif platform == 'windows':
     assert target_cpu in ('x86', 'x64'), 'target_cpu must be "x86" or "x64"'
   elif platform == 'linux':
-    assert target_cpu in ('x86', 'x64',
-                          'arm'), 'target_cpu must be "x86", "x64" or "arm"'
+    assert target_cpu in ('x86', 'x64', 'arm',
+                          'arm64'), 'target_cpu must be "x86", "x64", "arm" or "arm64"'
 
   if platform == 'linux':
     if target_cpu == 'x86':
@@ -537,6 +542,10 @@ def GetAllPlatformConfigs(build_args):
               % cpu)
     else:
       supported_cpus = ['x64']
+      from platform import machine
+      machine = machine()
+      if machine == 'aarch64':
+          supported_cpus = ['arm64']
 
   elif platform == 'windows':
     supported_cpus = ['x86', 'x64']
