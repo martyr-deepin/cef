@@ -33,8 +33,8 @@
 //
 // LinuxKernelCmpxchg and Barrier_AtomicIncrement are from Google Gears.
 
-#ifndef CEF_INCLUDE_BASE_INTERNAL_CEF_ATOMICOPS_ARM_GCC_H_
-#define CEF_INCLUDE_BASE_INTERNAL_CEF_ATOMICOPS_ARM_GCC_H_
+#ifndef CEF_INCLUDE_BASE_INTERNAL_CEF_ATOMICOPS_ARM64_GCC_H_
+#define CEF_INCLUDE_BASE_INTERNAL_CEF_ATOMICOPS_ARM64_GCC_H_
 
 namespace base {
 namespace subtle {
@@ -323,4 +323,4 @@ inline Atomic64 Release_Load(volatile const Atomic64* ptr) {
 }  // namespace base::subtle
 }  // namespace base
 
-#endif  // CEF_INCLUDE_BASE_INTERNAL_CEF_ATOMICOPS_ARM_GCC_H_
+#endif  // CEF_INCLUDE_BASE_INTERNAL_CEF_ATOMICOPS_ARM64_GCC_H_
