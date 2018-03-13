@@ -423,16 +423,17 @@ cef_dir = os.path.abspath(os.path.join(script_dir, os.pardir))
 # src directory
 src_dir = os.path.abspath(os.path.join(cef_dir, os.pardir))
 
-if not git.is_checkout(cef_dir):
-  raise Exception('Not a valid checkout: %s' % (cef_dir))
+# NOTE(Shaohua): No need to check cef git repo.
+#if not git.is_checkout(cef_dir):
+#  raise Exception('Not a valid checkout: %s' % (cef_dir))
 
 # retrieve information for CEF
 cef_url = git.get_url(cef_dir)
 cef_rev = git.get_hash(cef_dir)
 cef_commit_number = git.get_commit_number(cef_dir)
 
-if not git.is_checkout(src_dir):
-  raise Exception('Not a valid checkout: %s' % (src_dir))
+#if not git.is_checkout(src_dir):
+#  raise Exception('Not a valid checkout: %s' % (src_dir))
 
 # retrieve information for Chromium
 chromium_url = git.get_url(src_dir)
