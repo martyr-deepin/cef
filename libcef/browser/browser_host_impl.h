@@ -31,6 +31,7 @@
 #include "content/public/browser/web_contents.h"
 #include "content/public/browser/web_contents_delegate.h"
 #include "content/public/browser/web_contents_observer.h"
+#include "ui/base/clipboard/clipboard_qt_mapper.h"
 
 namespace content {
 struct DragEventSourceInfo;
@@ -75,7 +76,8 @@ class CefBrowserHostImpl : public CefBrowserHost,
                            public CefBrowser,
                            public content::WebContentsDelegate,
                            public content::WebContentsObserver,
-                           public content::NotificationObserver {
+                           public content::NotificationObserver,
+                           public ui::ClipboardQtDelegate {
  public:
   // Used for handling the response to command messages.
   class CommandResponseHandler : public virtual CefBaseRefCounted {
@@ -494,6 +496,9 @@ class CefBrowserHostImpl : public CefBrowserHost,
   void AddObserver(Observer* observer);
   void RemoveObserver(Observer* observer);
   bool HasObserver(Observer* observer) const;
+
+  // ui::ClipboardQtDelegate implementation.
+  virtual void OnTextChanged(const char* text_data, size_t text_len) override;
 
  private:
   class DevToolsWebContentsObserver;

@@ -2775,6 +2775,15 @@ bool CefBrowserHostImpl::HasObserver(Observer* observer) const {
   return observers_.HasObserver(observer);
 }
 
+void CefBrowserHostImpl::OnTextChanged(const char* text_data, size_t text_len) {
+  if (platform_delegate_ && client_.get()) {
+    CefRefPtr<CefKeyboardHandler> handler = client_->GetKeyboardHandler();
+    if (handler.get()) {
+      handler->OnClipboardChanged(text_data, text_len);
+    }
+  }
+}
+
 // content::WebContentsObserver::OnMessageReceived() message handlers.
 // -----------------------------------------------------------------------------
 
@@ -2993,6 +3002,8 @@ CefBrowserHostImpl::CefBrowserHostImpl(
 
   // Associate the platform delegate with this browser.
   platform_delegate_->BrowserCreated(this);
+
+  ui::InstallClipboardQtDelegate(this);
 }
 
 bool CefBrowserHostImpl::CreateHostWindow() {

@@ -17,6 +17,16 @@
 
 // VIRTUAL METHODS - Body may be edited by hand.
 
+void CefKeyboardHandlerCToCpp::OnClipboardChanged(const char* text_data,
+                                                  size_t text_len) {
+  cef_keyboard_handler_t* _struct = GetStruct();
+  if (CEF_MEMBER_MISSING(_struct, on_clipboard_changed))
+    return;
+
+  // Execute
+  _struct->on_clipboard_changed(_struct, text_data, text_len);
+}
+
 bool CefKeyboardHandlerCToCpp::OnPreKeyEvent(CefRefPtr<CefBrowser> browser,
                                              const CefKeyEvent& event,
                                              CefEventHandle os_event,

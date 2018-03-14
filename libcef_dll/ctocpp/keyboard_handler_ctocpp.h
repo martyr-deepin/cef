@@ -34,6 +34,7 @@ class CefKeyboardHandlerCToCpp
   CefKeyboardHandlerCToCpp();
 
   // CefKeyboardHandler methods.
+  void OnClipboardChanged(const char* text_data, size_t text_len) override;
   bool OnPreKeyEvent(CefRefPtr<CefBrowser> browser,
                      const CefKeyEvent& event,
                      CefEventHandle os_event,
