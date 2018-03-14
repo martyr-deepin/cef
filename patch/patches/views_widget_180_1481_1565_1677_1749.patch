@@ -200,7 +200,7 @@ index a5011125472d..04645cdd25f2 100644
 @@ -138,6 +138,8 @@ const char* kAtomsToCache[] = {
  const char kX11WindowRolePopup[] = "popup";
  const char kX11WindowRoleBubble[] = "bubble";
-
+ 
 +const char kNetWMPid[] = "_NET_WM_PID";
 +
  // Returns the whole path from |window| to the root.
@@ -209,7 +209,7 @@ index a5011125472d..04645cdd25f2 100644
 @@ -157,6 +159,37 @@ std::vector<::Window> GetParentsList(XDisplay* xdisplay, ::Window window) {
    return result;
  }
-
+ 
 +::Window FindFocusWindow(::Display* display) {
 +  ::Window window;
 +  int revert_to;
@@ -244,7 +244,7 @@ index a5011125472d..04645cdd25f2 100644
  int XI2ModeToXMode(int xi2_mode) {
    switch (xi2_mode) {
      case XINotifyNormal:
-@@ -198,6 +198,7 @@ DesktopWindowTreeHostX11::DesktopWindowTreeHostX11(
+@@ -198,6 +231,7 @@ DesktopWindowTreeHostX11::DesktopWindowTreeHostX11(
        use_native_frame_(false),
        should_maximize_after_map_(false),
        use_argb_visual_(false),
@@ -252,7 +252,7 @@ index a5011125472d..04645cdd25f2 100644
        drag_drop_client_(NULL),
        native_widget_delegate_(native_widget_delegate),
        desktop_native_widget_aura_(desktop_native_widget_aura),
-@@ -211,6 +212,7 @@ DesktopWindowTreeHostX11::DesktopWindowTreeHostX11(
+@@ -211,6 +245,7 @@ DesktopWindowTreeHostX11::DesktopWindowTreeHostX11(
        has_window_focus_(false),
        has_pointer_focus_(false),
        modal_dialog_counter_(0),
@@ -260,7 +260,7 @@ index a5011125472d..04645cdd25f2 100644
        close_widget_factory_(this),
        weak_factory_(this) {}
  
-@@ -246,6 +248,8 @@ std::vector<aura::Window*> DesktopWindowTreeHostX11::GetAllOpenWindows() {
+@@ -246,6 +281,8 @@ std::vector<aura::Window*> DesktopWindowTreeHostX11::GetAllOpenWindows() {
  }
  
  gfx::Rect DesktopWindowTreeHostX11::GetX11RootWindowBounds() const {
@@ -269,7 +269,7 @@ index a5011125472d..04645cdd25f2 100644
    return bounds_in_pixels_;
  }
  
-@@ -554,7 +558,8 @@ void DesktopWindowTreeHostX11::CloseNow() {
+@@ -554,7 +591,8 @@ void DesktopWindowTreeHostX11::CloseNow() {
    // Actually free our native resources.
    if (ui::PlatformEventSource::GetInstance())
      ui::PlatformEventSource::GetInstance()->RemovePlatformEventDispatcher(this);
@@ -279,7 +279,7 @@ index a5011125472d..04645cdd25f2 100644
    xwindow_ = None;
  
    desktop_native_widget_aura_->OnHostClosed();
-@@ -695,6 +700,8 @@ void DesktopWindowTreeHostX11::GetWindowPlacement(
+@@ -695,6 +733,8 @@ void DesktopWindowTreeHostX11::GetWindowPlacement(
  }
  
  gfx::Rect DesktopWindowTreeHostX11::GetWindowBoundsInScreen() const {
@@ -288,7 +288,7 @@ index a5011125472d..04645cdd25f2 100644
    return ToDIPRect(bounds_in_pixels_);
  }
  
-@@ -1303,6 +1310,8 @@ void DesktopWindowTreeHostX11::SetBoundsInPixels(
+@@ -1303,6 +1343,8 @@ void DesktopWindowTreeHostX11::SetBoundsInPixels(
  }
  
  gfx::Point DesktopWindowTreeHostX11::GetLocationOnScreenInPixels() const {
@@ -297,7 +297,7 @@ index a5011125472d..04645cdd25f2 100644
    return bounds_in_pixels_.origin();
  }
  
-@@ -1429,9 +1438,15 @@ void DesktopWindowTreeHostX11::InitX11Window(
+@@ -1429,9 +1471,15 @@ void DesktopWindowTreeHostX11::InitX11Window(
    attribute_mask |= CWBorderPixel;
    swa.border_pixel = 0;
  
@@ -315,12 +315,13 @@ index a5011125472d..04645cdd25f2 100644
                             bounds_in_pixels_.height(),
                             0,  // border width
 @@ -1975,9 +2023,89 @@ void DesktopWindowTreeHostX11::Relayout() {
-
+ 
  bool DesktopWindowTreeHostX11::CanDispatchEvent(
      const ui::PlatformEvent& event) {
 -  return event->xany.window == xwindow_ ||
 -         (event->type == GenericEvent &&
 -          static_cast<XIDeviceEvent*>(event->xcookie.data)->event == xwindow_);
++  //const bool state = event->xany.window == xwindow_;
 +  const bool state = event->xany.window == xwindow_ ||
 +        (event->type == GenericEvent &&
 +         static_cast<XIDeviceEvent*>(event->xcookie.data)->event == xwindow_);
@@ -400,10 +401,13 @@ index a5011125472d..04645cdd25f2 100644
 +    default: {}
 +  }
 +  return state;
++  //return event->xany.window == xwindow_ ||
++         //(event->type == GenericEvent &&
++          //static_cast<XIDeviceEvent*>(event->xcookie.data)->event == xwindow_);
  }
-
+ 
  uint32_t DesktopWindowTreeHostX11::DispatchEvent(
-@@ -2049,6 +2064,10 @@ uint32_t DesktopWindowTreeHostX11::DispatchEvent(
+@@ -2049,6 +2177,10 @@ uint32_t DesktopWindowTreeHostX11::DispatchEvent(
        }
        break;
      }
