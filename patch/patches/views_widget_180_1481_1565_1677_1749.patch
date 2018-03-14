@@ -197,6 +197,53 @@ diff --git ui/views/widget/desktop_aura/desktop_window_tree_host_x11.cc ui/views
 index a5011125472d..04645cdd25f2 100644
 --- ui/views/widget/desktop_aura/desktop_window_tree_host_x11.cc
 +++ ui/views/widget/desktop_aura/desktop_window_tree_host_x11.cc
+@@ -138,6 +138,8 @@ const char* kAtomsToCache[] = {
+ const char kX11WindowRolePopup[] = "popup";
+ const char kX11WindowRoleBubble[] = "bubble";
+
++const char kNetWMPid[] = "_NET_WM_PID";
++
+ // Returns the whole path from |window| to the root.
+ std::vector<::Window> GetParentsList(XDisplay* xdisplay, ::Window window) {
+   ::Window parent_win, root_win;
+@@ -157,6 +159,37 @@ std::vector<::Window> GetParentsList(XDisplay* xdisplay, ::Window window) {
+   return result;
+ }
+
++::Window FindFocusWindow(::Display* display) {
++  ::Window window;
++  int revert_to;
++  XGetInputFocus(display, &window, &revert_to);
++  return window;
++}
++
++::Window FindToplevelParent(::Display* display, ::Window window) {
++  ::Window top_level_window = window;
++  ::Window root = None;
++  ::Window parent = None;
++  ::Window* children = NULL;
++  unsigned int nchildren = 0;
++  // Enumerate all parents of "window" to find the highest level window
++  // that either:
++  //   - has a parent that does not contain the _NET_WM_PID property
++  //   - has a parent that is the root window.
++  while (XQueryTree(display, window, &root, &parent, &children, &nchildren)) {
++    if (children) {
++      XFree(children);
++    }
++
++    top_level_window = window;
++    if (!ui::PropertyExists(parent, kNetWMPid) || parent == root) {
++      break;
++    }
++    window = parent;
++  }
++  return top_level_window;
++}
++
+ int XI2ModeToXMode(int xi2_mode) {
+   switch (xi2_mode) {
+     case XINotifyNormal:
 @@ -198,6 +198,7 @@ DesktopWindowTreeHostX11::DesktopWindowTreeHostX11(
        use_native_frame_(false),
        should_maximize_after_map_(false),
@@ -267,6 +314,95 @@ index a5011125472d..04645cdd25f2 100644
                             bounds_in_pixels_.y(), bounds_in_pixels_.width(),
                             bounds_in_pixels_.height(),
                             0,  // border width
+@@ -1975,9 +2023,89 @@ void DesktopWindowTreeHostX11::Relayout() {
+
+ bool DesktopWindowTreeHostX11::CanDispatchEvent(
+     const ui::PlatformEvent& event) {
+-  return event->xany.window == xwindow_ ||
+-         (event->type == GenericEvent &&
+-          static_cast<XIDeviceEvent*>(event->xcookie.data)->event == xwindow_);
++  const bool state = event->xany.window == xwindow_ ||
++        (event->type == GenericEvent &&
++         static_cast<XIDeviceEvent*>(event->xcookie.data)->event == xwindow_);
++
++  const ::Window focused_window = FindFocusWindow(xdisplay_);
++
++  switch (event->type) {
++    case PropertyNotify: {
++      if (event->xproperty.atom == 301) {
++        XSetInputFocus(xdisplay_, xwindow_, RevertToParent, CurrentTime);
++        XFlush(xdisplay_);
++        return true;
++      } else if (state && (focused_window != xwindow_)) {
++        XFocusOutEvent focus_event;
++        memset(&focus_event, 0, sizeof(XFocusOutEvent));
++        focus_event.type = FocusOut;
++        focus_event.send_event = true;
++        focus_event.display = xdisplay_;
++        focus_event.window = focused_window;
++        XSendEvent(xdisplay_, focused_window, True, FocusChangeMask, (XEvent*)&focus_event);
++        XFlush(xdisplay_);
++
++        XSetInputFocus(xdisplay_, xwindow_, RevertToParent, CurrentTime);
++        XFlush(xdisplay_);
++
++      }
++      return true;
++      break;
++    }
++    case FocusIn: {
++      if (state) {
++        ::Window toplevel_window = FindToplevelParent(xdisplay_, xwindow_);
++        XFocusOutEvent focus_event;
++        memset(&focus_event, 0, sizeof(XFocusOutEvent));
++        focus_event.type = FocusOut;
++        focus_event.send_event = true;
++        focus_event.display = xdisplay_;
++        focus_event.window = toplevel_window;
++        XSendEvent(xdisplay_, toplevel_window, True, FocusChangeMask, (XEvent*)&focus_event);
++        XFlush(xdisplay_);
++
++        if (focused_window != xwindow_) {
++          XSetInputFocus(xdisplay_, xwindow_, RevertToParent, CurrentTime);
++          XFlush(xdisplay_);
++        }
++        return true;
++      }
++      break;
++    }
++    case ButtonPress: {
++      XSetInputFocus(xdisplay_, xwindow_, RevertToParent, CurrentTime);
++      XFlush(xdisplay_);
++      return true;
++    }
++    case KeyPress: {
++      if (focused_window != xwindow_) {
++        XKeyEvent dup_event;
++        memcpy(&dup_event, (XKeyEvent*)event, sizeof(XKeyEvent));
++        dup_event.window = focused_window;
++        XSendEvent(xdisplay_, focused_window, True, KeyPressMask, (XEvent*)&dup_event);
++        XFlush(xdisplay_);
++        return false;
++      }
++      break;
++    }
++    case KeyRelease: {
++      if (focused_window != xwindow_) {
++        XKeyEvent dup_event;
++        memcpy(&dup_event, (XKeyEvent*)event, sizeof(XKeyEvent));
++        dup_event.window = focused_window;
++        XSendEvent(xdisplay_, focused_window, True, KeyReleaseMask, (XEvent*)&dup_event);
++        XFlush(xdisplay_);
++        return false;
++      }
++      break;
++    }
++    default: {}
++  }
++  return state;
+ }
+
+ uint32_t DesktopWindowTreeHostX11::DispatchEvent(
 @@ -2049,6 +2064,10 @@ uint32_t DesktopWindowTreeHostX11::DispatchEvent(
        }
        break;
