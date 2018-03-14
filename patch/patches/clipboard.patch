@@ -1,7 +1,7 @@
-diff --git a/ui/base/clipboard/clipboard_aurax11.cc b/ui/base/clipboard/clipboard_aurax11.cc
+diff --git ui/base/clipboard/clipboard_aurax11.cc ui/base/clipboard/clipboard_aurax11.cc
 index 39e864738..181db2211 100644
---- a/ui/base/clipboard/clipboard_aurax11.cc
-+++ b/ui/base/clipboard/clipboard_aurax11.cc
+--- ui/base/clipboard/clipboard_aurax11.cc
++++ ui/base/clipboard/clipboard_aurax11.cc
 @@ -23,6 +23,7 @@
  #include "base/strings/utf_string_conversions.h"
  #include "third_party/skia/include/core/SkBitmap.h"
@@ -22,11 +22,11 @@ index 39e864738..181db2211 100644
        }
        aurax11_details_->TakeOwnershipOfSelection(CLIPBOARD_TYPE_SELECTION);
      }
-diff --git a/ui/base/clipboard/clipboard_qt_mapper.cc b/ui/base/clipboard/clipboard_qt_mapper.cc
+diff --git ui/base/clipboard/clipboard_qt_mapper.cc ui/base/clipboard/clipboard_qt_mapper.cc
 new file mode 100644
 index 000000000..f1e9dd202
 --- /dev/null
-+++ b/ui/base/clipboard/clipboard_qt_mapper.cc
++++ ui/base/clipboard/clipboard_qt_mapper.cc
 @@ -0,0 +1,26 @@
 +
 +#include "ui/base/clipboard/clipboard_qt_mapper.h"
@@ -54,11 +54,11 @@ index 000000000..f1e9dd202
 +}
 +
 +}  // namespace ui
-diff --git a/ui/base/clipboard/clipboard_qt_mapper.h b/ui/base/clipboard/clipboard_qt_mapper.h
+diff --git ui/base/clipboard/clipboard_qt_mapper.h ui/base/clipboard/clipboard_qt_mapper.h
 new file mode 100644
 index 000000000..1d369bee0
 --- /dev/null
-+++ b/ui/base/clipboard/clipboard_qt_mapper.h
++++ ui/base/clipboard/clipboard_qt_mapper.h
 @@ -0,0 +1,23 @@
 +
 +#ifndef UI_BASE_CLIPBOARD_CLIPBOARD_QT_MAPPER_H_
