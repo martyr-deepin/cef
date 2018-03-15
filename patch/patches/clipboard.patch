@@ -1,3 +1,16 @@
+diff --git ui/base/BUILD.gn ui/base/BUILD.gn
+index 05cb33baa..838636f44 100644
+--- ui/base/BUILD.gn
++++ ui/base/BUILD.gn
+@@ -74,6 +74,8 @@ component("base") {
+     "clipboard/clipboard_android.h",
+     "clipboard/clipboard_mac.h",
+     "clipboard/clipboard_mac.mm",
++    "clipboard/clipboard_qt_mapper.cc",
++    "clipboard/clipboard_qt_mapper.h",
+     "clipboard/clipboard_types.h",
+     "clipboard/clipboard_util_mac.h",
+     "clipboard/clipboard_util_mac.mm",
 diff --git ui/base/clipboard/clipboard_aurax11.cc ui/base/clipboard/clipboard_aurax11.cc
 index 39e864738..181db2211 100644
 --- ui/base/clipboard/clipboard_aurax11.cc
