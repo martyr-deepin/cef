@@ -254,12 +254,18 @@ def GetRecommendedDefaultArgs():
     result['use_gconf'] = True
     result['use_gio'] = True
     result['use_gnome_keyring'] = False
-    result['use_gold'] = True
     result['use_kerberos'] = False
     result['use_ozone'] = False
     result['use_pulseaudio'] = True
     result['use_vulcanize'] = False
     #result['v8_use_external_startup_data'] = False
+
+    from platform import machine
+    machine = machine()
+    if machine in ('mips64', 'arm'):
+      result['use_gold'] = False
+    else:
+      result['use_gold'] = True
 
   return result
 
