@@ -347,13 +347,13 @@ def ValidateArgs(args):
     assert target_cpu in ('x86', 'x64'), 'target_cpu must be "x86" or "x64"'
   elif platform == 'linux':
     assert target_cpu in ('x86', 'x64', 'arm',
-                          'arm64'), 'target_cpu must be "x86", "x64", "arm" or "arm64"'
+                          'arm64', 'mips64el'), 'target_cpu must be "x86", "x64", "mips64el", "arm" or "arm64"'
 
-  if platform == 'linux':
-    if target_cpu == 'x86':
-      assert use_sysroot, 'target_cpu="x86" requires use_sysroot=true'
-    elif target_cpu == 'arm':
-      assert use_sysroot, 'target_cpu="arm" requires use_sysroot=true'
+#  if platform == 'linux':
+#    if target_cpu == 'x86':
+#      assert use_sysroot, 'target_cpu="x86" requires use_sysroot=true'
+#    elif target_cpu == 'arm':
+#      assert use_sysroot, 'target_cpu="arm" requires use_sysroot=true'
 
   # ASAN requires Release builds.
   if is_asan:
@@ -541,6 +541,12 @@ def GetAllPlatformConfigs(build_args):
       machine = machine()
       if machine == 'aarch64':
           supported_cpus = ['arm64']
+      elif machine == 'x86_64':
+          supported_cpus = ['x64']
+      elif machine == 'i386':
+          supported_cpus = ['x86']
+      elif machine == 'mips64':
+          supported_cpus = ['mips64el']
 
   elif platform == 'windows':
     supported_cpus = ['x86', 'x64']
