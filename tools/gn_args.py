@@ -264,6 +264,7 @@ def GetRecommendedDefaultArgs():
     machine = machine()
     if machine in ('mips64', 'arm'):
       result['use_gold'] = False
+      result['use_system_freetype'] = True
     else:
       result['use_gold'] = True
 
