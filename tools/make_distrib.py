@@ -498,12 +498,22 @@ cef_paths2 = cef_paths2['variables']
 
 # Determine the build directory suffix. CEF uses a consistent directory naming
 # scheme for GN via GetAllPlatformConfigs in gn_args.py.
-if options.x64build:
+#if options.x64build:
+#  build_dir_suffix = '_GN_x64'
+#elif options.armbuild:
+#  build_dir_suffix = '_GN_arm'
+#else:
+#  build_dir_suffix = '_GN_x86'
+from platform import machine
+machine = machine()
+if machine == 'aarch64':
+  build_dir_suffix = '_GN_arm64'
+elif machine == 'x86_64':
   build_dir_suffix = '_GN_x64'
-elif options.armbuild:
-  build_dir_suffix = '_GN_arm'
-else:
+elif machine == 'i386':
   build_dir_suffix = '_GN_x86'
+elif machine == 'mips64':
+  build_dir_suffix = '_GN_mips64el'
 
 # Determine the build directory paths.
 out_dir = os.path.join(src_dir, 'out')
