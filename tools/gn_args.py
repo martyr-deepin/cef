@@ -215,6 +215,7 @@ def GetRecommendedDefaultArgs():
     # x86 or x64 build: $ gclient runhooks
     result['use_sysroot'] = False
 
+    result['fatal_linker_warnings'] = False
     result['clang_use_chrome_plugins'] = False
     #result['enable_background'] = False
     #result['enable_extensions'] = False
@@ -265,6 +266,8 @@ def GetRecommendedDefaultArgs():
     if machine in ('mips64', 'arm'):
       result['use_gold'] = False
       result['use_system_freetype'] = True
+      result['use_gconf'] = False
+      result['optimize_for_size'] = False
     else:
       result['use_gold'] = True
 
@@ -506,6 +509,8 @@ def LinuxSysrootExists(cpu):
     sysroot_name = 'debian_jessie_i386-sysroot'
   elif cpu == 'x64':
     sysroot_name = 'debian_jessie_amd64-sysroot'
+  elif cpu == 'mips64el':
+    sysroot_name = 'debian_jessie_mips64el-sysroot'
   elif cpu == 'arm':
     sysroot_name = 'debian_jessie_arm-sysroot'
   else:
@@ -523,7 +528,7 @@ def GetAllPlatformConfigs(build_args):
   # Merged args without validation.
   args = GetMergedArgs(build_args)
 
-  create_debug = True
+  create_debug = False
 
   # Don't create debug directories for asan builds.
   if GetArgValue(args, 'is_asan'):
@@ -536,7 +541,7 @@ def GetAllPlatformConfigs(build_args):
     use_sysroot = GetArgValue(args, 'use_sysroot')
     if use_sysroot:
       # Only generate configurations for sysroots that have been installed.
-      for cpu in ('x86', 'x64', 'arm'):
+      for cpu in ('x86', 'x64', 'mips64el', 'arm'):
         if LinuxSysrootExists(cpu):
           supported_cpus.append(cpu)
         else:

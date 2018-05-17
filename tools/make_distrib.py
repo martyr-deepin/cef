@@ -352,6 +352,12 @@ parser.add_option(
     default=False,
     help='create an ARM binary distribution (Linux only)')
 parser.add_option(
+    '--mips64el-build',
+    action='store_true',
+    dest='mips64elbuild',
+    default=False,
+    help='create an MIPS64 binary distribution (Linux only)')
+parser.add_option(
     '--minimal',
     action='store_true',
     dest='minimal',
