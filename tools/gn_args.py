@@ -215,19 +215,20 @@ def GetRecommendedDefaultArgs():
     # x86 or x64 build: $ gclient runhooks
     result['use_sysroot'] = False
 
+    # Currently,tcmalloc not support on mips.
+    result['use_allocator'] = "none"
+
     result['fatal_linker_warnings'] = False
     result['clang_use_chrome_plugins'] = False
     #result['enable_background'] = False
     #result['enable_extensions'] = False
+    result['enable_nacl_nonsfi'] = False
     result['enable_google_now'] = False
     result['enable_hangout_services_extension'] = False
     result['enable_hotwording'] = False
     result['enable_iterator_debugging'] = False
-    result['enable_nacl_nonsfi'] = False
-    #result['enable_notifications'] = False
     #result['enable_one_click_signin'] = False
     result['enable_openvr'] = False
-    #result['enable_pdf'] = False
     result['enable_reading_list'] = False
     result['enable_remoting'] = False
     result['enable_service_discovery'] = False
@@ -249,12 +250,10 @@ def GetRecommendedDefaultArgs():
     #result['safe_browsing_mode'] = 0
     result['symbol_level'] = 0
     result['treat_warnings_as_errors'] = False
-    # Disable tcmalloc
-    result['use_allocator'] = 'none'
-    result['use_alsa'] = False
     result['use_gconf'] = True
     result['use_gio'] = True
     result['use_gnome_keyring'] = False
+    result['use_gold'] = True
     result['use_kerberos'] = False
     result['use_ozone'] = False
     result['use_pulseaudio'] = True
@@ -265,11 +264,9 @@ def GetRecommendedDefaultArgs():
     machine = machine()
     if machine in ('mips64', 'arm'):
       result['use_gold'] = False
-      result['use_system_freetype'] = True
       result['use_gconf'] = False
       result['optimize_for_size'] = False
-    else:
-      result['use_gold'] = True
+      result['use_cups'] = True
 
   return result
 
